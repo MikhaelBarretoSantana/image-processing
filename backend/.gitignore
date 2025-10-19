@@ -1,0 +1,30 @@
+# Ignorar ambiente virtual
+venv/
+env/
+.venv/
+
+# Ignorar arquivos do Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Ignorar arquivos temporários da API
+temp/uploads/*
+temp/outputs/*
+!temp/.gitkeep
+!temp/uploads/.gitkeep
+!temp/outputs/.gitkeep
+
+# Ignorar imagens de output
+output/*.jpg
+output/*.png
+output/*.jpeg
+output/*.bmp
+output/*.gif
+!output/.gitkeep
+
+# Ignorar variáveis de ambiente
+.env
+.env.local
