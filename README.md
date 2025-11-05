@@ -32,20 +32,13 @@ Sistema completo de processamento de imagens com ajuste de **brilho** e **contra
 
 - **Python** 3.8 ou superior
 - **Node.js** 16 ou superior
-- **pip** (gerenciador de pacotes Python)
-- **npm** (gerenciador de pacotes Node)
 
-### Instalação em 3 passos
-
-#### 1️⃣ **Backend (API)**
 
 ```powershell
 # Entrar na pasta backend
 cd backend
 
 # Instalar dependências
-pip install -r requirements.txt
-
 # Iniciar servidor
 python start_api.py
 ```
@@ -59,8 +52,6 @@ python start_api.py
 # Abrir novo terminal e entrar na pasta frontend
 cd frontend
 
-# Instalar dependências
-npm install
 
 # Iniciar aplicação
 npm run dev
@@ -74,7 +65,6 @@ npm run dev
 2. Arraste ou clique para fazer upload de uma imagem
 3. Ajuste **brilho** (0.0-3.0) e **contraste** (0.0-3.0) com os sliders
 4. Clique em **"Aplicar Ajustes"**
-5. Compare o resultado lado a lado
 6. Baixe sua imagem processada!
 
 ---

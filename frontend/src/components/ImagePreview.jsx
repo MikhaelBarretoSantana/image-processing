@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './ImagePreview.css';
 
 const ImagePreview = ({
@@ -8,11 +8,74 @@ const ImagePreview = ({
   onDownload,
   onNewImage
 }) => {
-  const [showComparison, setShowComparison] = React.useState(false);
+  const [showComparison, setShowComparison] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [sliderValue, setSliderValue] = useState(50);
+  const imageRef = useRef(null);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    setZoomLevel(1);
+    setPosition({ x: 0, y: 0 });
+  }, [originalImage, processedImage]);
+
+  const handleZoomIn = () => {
+    setZoomLevel(prev => Math.min(prev + 0.25, 3));
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel(prev => Math.max(prev - 0.25, 0.5));
+  };
+
+  const handleZoomReset = () => {
+    setZoomLevel(1);
+    setPosition({ x: 0, y: 0 });
+  };
+
+  const handleMouseDown = (e) => {
+    if (zoomLevel > 1) {
+      setIsDragging(true);
+      setDragStart({
+        x: e.clientX - position.x,
+        y: e.clientY - position.y
+      });
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging && zoomLevel > 1) {
+      setPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleWheel = (e) => {
+    e.preventDefault();
+    if (e.deltaY < 0) {
+      handleZoomIn();
+    } else {
+      handleZoomOut();
+    }
+  };
 
   if (!originalImage && !processedImage) {
     return null;
   }
+
+  const imageStyle = {
+    transform: `scale(${zoomLevel}) translate(${position.x / zoomLevel}px, ${position.y / zoomLevel}px)`,
+    cursor: zoomLevel > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
+    transition: isDragging ? 'none' : 'transform 0.2s ease'
+  };
 
   return (
     <div className="image-preview">
@@ -36,13 +99,85 @@ const ImagePreview = ({
             onClick={() => setShowComparison(!showComparison)}
             className="btn-toggle"
           >
-            {showComparison ? '👁️ Ver Apenas Resultado' : '⚖️ Comparar Original'}
+            {showComparison ? '👁️ Ver Apenas Resultado' : '⚖️ Comparar Lado a Lado'}
+          </button>
+          <button
+            onClick={() => {
+              setShowComparison('slider');
+            }}
+            className="btn-toggle"
+          >
+            🔀 Comparar com Slider
           </button>
         </div>
       )}
+      
+      <div className="zoom-controls">
+        <button onClick={handleZoomOut} disabled={zoomLevel <= 0.5} className="zoom-btn">
+          🔍−
+        </button>
+        <span className="zoom-level">{Math.round(zoomLevel * 100)}%</span>
+        <button onClick={handleZoomIn} disabled={zoomLevel >= 3} className="zoom-btn">
+          🔍+
+        </button>
+        <button onClick={handleZoomReset} className="zoom-btn">
+          ↺ Reset
+        </button>
+      </div>
 
-      <div className={`preview-container ${showComparison ? 'comparison-mode' : ''}`}>
-        {showComparison && originalImage ? (
+      <div 
+        ref={containerRef}
+        className={`preview-container ${showComparison === true ? 'comparison-mode' : ''} ${showComparison === 'slider' ? 'slider-mode' : ''}`}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onWheel={handleWheel}
+      >
+        {showComparison === 'slider' && originalImage && processedImage ? (
+          <div className="slider-comparison">
+            <div className="slider-images">
+              <img
+                src={originalImage}
+                alt="Original"
+                className="preview-image slider-original"
+                style={imageStyle}
+              />
+              <div 
+                className="slider-overlay"
+                style={{ clipPath: `inset(0 ${100 - sliderValue}% 0 0)` }}
+              >
+                <img
+                  src={processedImage}
+                  alt="Processada"
+                  className="preview-image slider-processed"
+                  style={imageStyle}
+                />
+              </div>
+              <div 
+                className="slider-divider"
+                style={{ left: `${sliderValue}%` }}
+              >
+                <div className="slider-handle">
+                  <span>←</span>
+                  <span>→</span>
+                </div>
+              </div>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={sliderValue}
+              onChange={(e) => setSliderValue(Number(e.target.value))}
+              className="comparison-slider"
+            />
+            <div className="slider-labels">
+              <span>Original</span>
+              <span>Processada</span>
+            </div>
+          </div>
+        ) : showComparison === true && originalImage ? (
           <>
             <div className="preview-image-wrapper">
               <div className="image-label">Original</div>
@@ -50,6 +185,8 @@ const ImagePreview = ({
                 src={originalImage}
                 alt="Original"
                 className="preview-image"
+                style={imageStyle}
+                ref={imageRef}
               />
             </div>
             <div className="preview-image-wrapper">
@@ -58,6 +195,7 @@ const ImagePreview = ({
                 src={processedImage || originalImage}
                 alt="Processada"
                 className="preview-image"
+                style={imageStyle}
               />
             </div>
           </>
@@ -67,6 +205,8 @@ const ImagePreview = ({
               src={processedImage || originalImage}
               alt="Visualização"
               className="preview-image"
+              style={imageStyle}
+              ref={imageRef}
             />
           </div>
         )}

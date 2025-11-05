@@ -1,13 +1,6 @@
-/**
- * Serviço de comunicação com a API de processamento de imagens
- */
-
 const API_BASE_URL = 'http://localhost:8000';
 
 class ImageProcessingAPI {
-  /**
-   * Verifica o status da API
-   */
   async healthCheck() {
     try {
       const response = await fetch(`${API_BASE_URL}/health`);
@@ -18,11 +11,6 @@ class ImageProcessingAPI {
     }
   }
 
-  /**
-   * Faz upload de uma imagem
-   * @param {File} file - Arquivo de imagem
-   * @returns {Promise<Object>} Informações da imagem enviada
-   */
   async uploadImage(file) {
     try {
       const formData = new FormData();
@@ -45,18 +33,12 @@ class ImageProcessingAPI {
     }
   }
 
-  /**
-   * Processa uma imagem com ajustes de brilho e contraste
-   * @param {string} imageId - ID da imagem
-   * @param {number} brightness - Fator de brilho (0.0-3.0)
-   * @param {number} contrast - Fator de contraste (0.0-3.0)
-   * @returns {Promise<Object>} Resultado do processamento
-   */
-  async processImage(imageId, brightness = 1.0, contrast = 1.0) {
+  async processImage(imageId, brightness = 1.0, contrast = 1.0, saturation = 1.0) {
     try {
       const formData = new FormData();
       formData.append('brightness', brightness.toString());
       formData.append('contrast', contrast.toString());
+      formData.append('saturation', saturation.toString());
 
       const response = await fetch(`${API_BASE_URL}/process/${imageId}`, {
         method: 'POST',
@@ -75,12 +57,6 @@ class ImageProcessingAPI {
     }
   }
 
-  /**
-   * Obtém preview da imagem em base64
-   * @param {string} imageId - ID da imagem
-   * @param {boolean} processed - true para processada, false para original
-   * @returns {Promise<Object>} Preview em base64
-   */
   async getPreview(imageId, processed = false) {
     try {
       const response = await fetch(
@@ -99,21 +75,10 @@ class ImageProcessingAPI {
     }
   }
 
-  /**
-   * Obtém URL para download da imagem
-   * @param {string} imageId - ID da imagem
-   * @param {boolean} processed - true para processada, false para original
-   * @returns {string} URL para download
-   */
   getDownloadUrl(imageId, processed = true) {
     return `${API_BASE_URL}/download/${imageId}?processed=${processed}`;
   }
 
-  /**
-   * Obtém informações sobre uma imagem
-   * @param {string} imageId - ID da imagem
-   * @returns {Promise<Object>} Informações da imagem
-   */
   async getImageInfo(imageId) {
     try {
       const response = await fetch(`${API_BASE_URL}/info/${imageId}`);
@@ -130,11 +95,6 @@ class ImageProcessingAPI {
     }
   }
 
-  /**
-   * Deleta uma imagem
-   * @param {string} imageId - ID da imagem
-   * @returns {Promise<Object>} Confirmação da exclusão
-   */
   async deleteImage(imageId) {
     try {
       const response = await fetch(`${API_BASE_URL}/delete/${imageId}`, {
@@ -153,13 +113,6 @@ class ImageProcessingAPI {
     }
   }
 
-  /**
-   * Processa imagem via base64 (tudo em uma requisição)
-   * @param {string} base64Data - Imagem em base64
-   * @param {number} brightness - Fator de brilho
-   * @param {number} contrast - Fator de contraste
-   * @returns {Promise<Object>} Imagem processada em base64
-   */
   async processBase64(base64Data, brightness = 1.0, contrast = 1.0) {
     try {
       const formData = new FormData();
@@ -183,7 +136,116 @@ class ImageProcessingAPI {
       throw error;
     }
   }
+
+  async autoAdjust(imageId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auto-adjust/${imageId}`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Erro no ajuste automático');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Erro no ajuste automático:', error);
+      throw error;
+    }
+  }
+
+  async applyClahe(imageId, clipLimit = 2.0, tileGridSize = 8) {
+    try {
+      const formData = new FormData();
+      formData.append('clip_limit', clipLimit.toString());
+      formData.append('tile_grid_size', tileGridSize.toString());
+
+      const response = await fetch(`${API_BASE_URL}/apply-clahe/${imageId}`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Erro ao aplicar CLAHE');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Erro ao aplicar CLAHE:', error);
+      throw error;
+    }
+  }
+
+  async applySCurve(imageId, intensity = 0.5) {
+    try {
+      const formData = new FormData();
+      formData.append('intensity', intensity.toString());
+
+      const response = await fetch(`${API_BASE_URL}/apply-s-curve/${imageId}`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Erro ao aplicar curva S');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Erro ao aplicar curva S:', error);
+      throw error;
+    }
+  }
+
+  async getHistogram(imageId, processed = false) {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/histogram/${imageId}?processed=${processed}`
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Erro ao obter histograma');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Erro ao obter histograma:', error);
+      throw error;
+    }
+  }
+
+  async batchProcess(files, brightness = 1.0, contrast = 1.0, saturation = 1.0) {
+    try {
+      const formData = new FormData();
+      
+      files.forEach(file => {
+        formData.append('files', file);
+      });
+      
+      formData.append('brightness', brightness.toString());
+      formData.append('contrast', contrast.toString());
+      formData.append('saturation', saturation.toString());
+
+      const response = await fetch(`${API_BASE_URL}/batch-process`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Erro no processamento em lote');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Erro no processamento em lote:', error);
+      throw error;
+    }
+  }
 }
 
-// Exporta uma instância singleton
 export default new ImageProcessingAPI();

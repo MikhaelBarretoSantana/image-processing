@@ -231,6 +231,22 @@ body {
   text-decoration: underline;
 }
 
+.histogram-controls {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.histogram-section {
+  margin-top: 20px;
+}
+
+.histogram-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+}
+
 @media (max-width: 768px) {
   .app-title {
     font-size: 2rem;
