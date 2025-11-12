@@ -129,6 +129,14 @@ processamento-imagens/
 │   ├── vite.config.js                  # Configuração Vite
 │   └── README.md                       # Documentação do frontend
 │
+├── 📂 docs/                          # Documentação do Projeto
+│   ├── semana-02.pdf                   # Documentação da semana 2
+│   ├── semana-03.pdf                   # Documentação da semana 3
+│   └── semana-04.pdf                   # Documentação da semana 4
+│
+├── 📂 demo/                          # Demonstração do Projeto
+│   └── semana-05.mp4                   # Vídeo demonstrativo
+│
 ├── 📄 README.md                      # Este arquivo
 
 ```
@@ -237,9 +245,34 @@ O script oferece 3 modos:
 
 ---
 
+## 🎬 Demonstração
+
+### 📹 Vídeo Demonstrativo
+
+Confira o vídeo de apresentação do projeto em funcionamento:
+
+- **[demo/semana-05.mp4](demo/semana-05.mp4)** - Demonstração completa do sistema com interface e processamento de imagens em tempo real
+
+O vídeo mostra:
+- ✨ Interface do usuário e navegação
+- 📤 Upload de imagens (drag & drop)
+- 🎚️ Ajuste de brilho e contraste em tempo real
+- ⚖️ Modo comparação antes/depois
+- 💾 Download de resultados
+
+---
+
 ## 📚 Documentação
 
-### 📖 Guias Disponíveis
+### 📖 Documentação Técnica do Projeto
+
+A pasta `docs/` contém a documentação progressiva do desenvolvimento:
+
+- **[docs/semana-02.pdf](docs/semana-02.pdf)** - Documentação da fase inicial do projeto (semana 2)
+- **[docs/semana-03.pdf](docs/semana-03.pdf)** - Avanços e implementações (semana 3)
+- **[docs/semana-04.pdf](docs/semana-04.pdf)** - Refinamentos e otimizações (semana 4)
+
+### 📖 Guias Adicionais
 
 - **[API_GUIDE.md](API_GUIDE.md)** - Documentação completa da API REST com exemplos em curl e JavaScript
 - **[GUIA_COMPLETO.md](GUIA_COMPLETO.md)** - Documentação técnica detalhada do sistema completo
@@ -403,9 +436,17 @@ Contribuições são bem-vindas! Para contribuir:
 
 1. 🍴 Faça um **Fork** do projeto
 2. 🌿 Crie uma **branch** para sua feature (`git checkout -b feature/MinhaFeature`)
-3. 💾 **Commit** suas mudanças (`git commit -m 'Adiciona MinhaFeature'`)
-4. 📤 **Push** para a branch (`git push origin feature/MinhaFeature`)
-5. 🔄 Abra um **Pull Request**
+3. 📖 Consulte a documentação em `docs/` para entender o histórico e decisões do projeto
+4. 💾 **Commit** suas mudanças (`git commit -m 'Adiciona MinhaFeature'`)
+5. 📤 **Push** para a branch (`git push origin feature/MinhaFeature`)
+6. 🔄 Abra um **Pull Request**
+
+### 📝 Ao Contribuir
+
+- Atualize a documentação se necessário
+- Teste suas mudanças localmente
+- Siga o padrão de código existente
+- Consulte os PDFs em `docs/` para entender as decisões de arquitetura
 
 ---
 
