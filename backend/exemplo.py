@@ -10,7 +10,7 @@ from pathlib import Path
 # Adiciona o diretório src ao path
 sys.path.append(str(Path(__file__).parent / 'src'))
 
-from processamento_imagem import ProcessadorImagem
+from src.processamento_imagem import ProcessadorImagem
 import matplotlib.pyplot as plt
 from PIL import Image
 
