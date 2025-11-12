@@ -6,7 +6,6 @@ import uvicorn
 import sys
 from pathlib import Path
 
-# Adiciona o diretório src ao path
 sys.path.insert(0, str(Path(__file__).parent / 'src'))
 
 if __name__ == "__main__":
