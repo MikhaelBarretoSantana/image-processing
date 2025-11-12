@@ -173,8 +173,8 @@ const ImagePreview = ({
               className="comparison-slider"
             />
             <div className="slider-labels">
-              <span>Original</span>
               <span>Processada</span>
+              <span>Original</span>
             </div>
           </div>
         ) : showComparison === true && originalImage ? (
