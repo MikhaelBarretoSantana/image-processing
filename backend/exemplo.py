@@ -7,10 +7,9 @@ import sys
 import os
 from pathlib import Path
 
-# Adiciona o diretório src ao path
 sys.path.append(str(Path(__file__).parent / 'src'))
 
-from processamento_imagem import ProcessadorImagem
+from src.processamento_imagem import ProcessadorImagem
 import matplotlib.pyplot as plt
 from PIL import Image
 
@@ -21,37 +20,37 @@ def exemplo_basico():
     print("EXEMPLO 1: Ajuste básico de brilho e contraste")
     print("=" * 60)
     
-    # Caminho para a imagem (você precisa colocar uma imagem na pasta images/)
+    
     caminho_imagem = "images/primo.jpeg"
     
-    # Verifica se a imagem existe
+    
     if not os.path.exists(caminho_imagem):
         print(f"\n⚠️  Imagem não encontrada: {caminho_imagem}")
         print("Por favor, coloque uma imagem chamada 'exemplo.jpg' na pasta 'images/'")
         return
     
-    # Cria o processador
+    
     processador = ProcessadorImagem(caminho_imagem)
     
-    # Exibe informações da imagem
+    
     info = processador.obter_info()
     print(f"\nInformações da imagem:")
     print(f"  Formato: {info['formato']}")
     print(f"  Modo: {info['modo']}")
     print(f"  Tamanho: {info['largura']}x{info['altura']} pixels")
     
-    # Ajusta o brilho
+    
     print(f"\n📝 Aumentando brilho (fator 1.5)...")
     processador.ajustar_brilho(1.5)
     processador.salvar("output/imagem_brilhante.jpg")
     
-    # Reseta e ajusta o contraste
+    
     print(f"📝 Resetando e aumentando contraste (fator 2.0)...")
     processador.resetar()
     processador.ajustar_contraste(2.0)
     processador.salvar("output/imagem_contraste.jpg")
     
-    # Reseta e ajusta ambos
+    
     print(f"📝 Ajustando brilho e contraste simultaneamente...")
     processador.resetar()
     processador.ajustar_brilho_contraste(1.2, 1.5)
@@ -72,45 +71,45 @@ def exemplo_comparacao():
         print(f"\n⚠️  Imagem não encontrada: {caminho_imagem}")
         return
     
-    # Cria figura com subplots
+    
     fig, axes = plt.subplots(2, 3, figsize=(15, 10))
     fig.suptitle('Comparação de Ajustes de Brilho e Contraste', fontsize=16)
     
-    # Imagem original
+    
     processador = ProcessadorImagem(caminho_imagem)
     axes[0, 0].imshow(processador.imagem)
     axes[0, 0].set_title('Original')
     axes[0, 0].axis('off')
     
-    # Brilho reduzido
+    
     processador.resetar()
     processador.ajustar_brilho(0.5)
     axes[0, 1].imshow(processador.imagem_processada)
     axes[0, 1].set_title('Brilho Reduzido (0.5)')
     axes[0, 1].axis('off')
     
-    # Brilho aumentado
+    
     processador.resetar()
     processador.ajustar_brilho(1.5)
     axes[0, 2].imshow(processador.imagem_processada)
     axes[0, 2].set_title('Brilho Aumentado (1.5)')
     axes[0, 2].axis('off')
     
-    # Contraste reduzido
+    
     processador.resetar()
     processador.ajustar_contraste(0.5)
     axes[1, 0].imshow(processador.imagem_processada)
     axes[1, 0].set_title('Contraste Reduzido (0.5)')
     axes[1, 0].axis('off')
     
-    # Contraste aumentado
+    
     processador.resetar()
     processador.ajustar_contraste(2.0)
     axes[1, 1].imshow(processador.imagem_processada)
     axes[1, 1].set_title('Contraste Aumentado (2.0)')
     axes[1, 1].axis('off')
     
-    # Ambos ajustados
+    
     processador.resetar()
     processador.ajustar_brilho_contraste(1.3, 1.5)
     axes[1, 2].imshow(processador.imagem_processada)
@@ -141,11 +140,11 @@ def exemplo_interativo():
     try:
         processador = ProcessadorImagem(caminho_imagem)
         
-        # Exibe informações
+        
         info = processador.obter_info()
         print(f"\nImagem carregada: {info['largura']}x{info['altura']} pixels")
         
-        # Solicita valores de ajuste
+        
         print("\nAjuste de Brilho:")
         print("  0.0 = preto completo")
         print("  1.0 = brilho original")
@@ -158,17 +157,17 @@ def exemplo_interativo():
         print("  >1.0 = mais contraste")
         fator_contraste = float(input("Digite o fator de contraste (ex: 1.5): ") or "1.0")
         
-        # Aplica os ajustes
+        
         processador.ajustar_brilho_contraste(fator_brilho, fator_contraste)
         
-        # Salva a imagem
+        
         caminho_saida = input("\nDigite o caminho de saída (ou Enter para 'output/processada.jpg'): ").strip()
         if not caminho_saida:
             caminho_saida = "output/processada.jpg"
         
         processador.salvar(caminho_saida)
         
-        # Pergunta se deseja visualizar
+        
         visualizar = input("\nDeseja visualizar a imagem? (s/n): ").strip().lower()
         if visualizar == 's':
             processador.visualizar()
